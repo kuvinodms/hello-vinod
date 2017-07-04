@@ -1,42 +1,47 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "storageAccountType": {
+    "storageNamePrefix": {
       "type": "string",
-      "defaultValue": "Standard_LRS",
+      "maxLength": 11,
+      "defaultValue": "storage",
+      "metadata": {
+        "description": "The value to use for starting the storage account name."
+      }
+    },
+    "storageSKU": {
+      "type": "string",
       "allowedValues": [
         "Standard_LRS",
-        "Standard_GRS",
         "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
         "Premium_LRS"
       ],
+      "defaultValue": "Standard_LRS",
       "metadata": {
-        "description": "Storage Account type"
+        "description": "The type of replication to use for the storage account."
       }
     }
   },
   "variables": {
-    "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'standardsa')]"
+    "storageName": "[concat(parameters('storageNamePrefix'), uniqueString(resourceGroup().id))]"
   },
   "resources": [
     {
+      "name": "[variables('storageName')]",
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('storageAccountName')]",
-      "apiVersion": "2016-01-01",
-      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-12-01",
       "sku": {
-          "name": "[parameters('storageAccountType')]"
+        "name": "[parameters('storageSKU')]"
       },
-      "kind": "Storage", 
+      "kind": "Storage",
+      "location": "[resourceGroup().location]",
+      "tags": {},
       "properties": {
       }
     }
   ],
-  "outputs": {
-      "storageAccountName": {
-          "type": "string",
-          "value": "[variables('storageAccountName')]"
-      }
-  }
+  "outputs": {  }
 }
