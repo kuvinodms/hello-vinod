@@ -3,7 +3,7 @@
             "parameters": {
                 "accountName": {
                     "type": "string",
-                    "defaultValue": "kuvinodddd",
+                    "defaultValue": "kuvinodddd"
                 },
                 "location": "Central US"
             },
